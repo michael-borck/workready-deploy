@@ -1,0 +1,9 @@
+# Local config (contains secrets)
+.env
+domains.env
+
+# SQLite data
+data/
+
+# macOS
+.DS_Store

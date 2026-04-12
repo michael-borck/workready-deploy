@@ -1,0 +1,29 @@
+# WorkReady Simulation — Docker deployment
+#
+# Two ways to use this file:
+#
+#   A) Pull pre-built image from GHCR (recommended):
+#      cp domains.env.example domains.env   # edit with your domains
+#      cp .env.example .env                 # edit with your API keys
+#      docker compose up -d
+#
+#   B) Build locally (for development):
+#      docker compose up -d --build
+#
+# The image is published to ghcr.io/michael-borck/workready:latest
+# on every push to main via GitHub Actions.
+
+services:
+  workready:
+    image: ghcr.io/michael-borck/workready:latest
+    build: .                       # ignored when pulling; used by --build
+    container_name: workready
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data:/opt/workready/data
+    env_file:
+      - domains.env
+      - .env
+    restart: unless-stopped

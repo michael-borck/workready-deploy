@@ -1,0 +1,77 @@
+# ============================================================
+# WorkReady Simulation — Caddy reverse proxy + file server
+#
+# Serves 6 company sites, the portal, seek.jobs, and the API
+# from a single machine. Each site gets its own domain via
+# environment variables from domains.env.
+#
+# Caddy natively substitutes {$ENV_VAR} at startup.
+#
+# If no domains are configured, the fallback block at the
+# bottom serves everything on :80 with path-based routing
+# (useful for local testing without DNS).
+# ============================================================
+
+# --- Company sites (static) ---
+
+{$DOMAIN_IRONVALE:ironvale.localhost} {
+	root * /opt/workready/ironvale-resources/dist
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+{$DOMAIN_NEXUSPOINT:nexuspoint.localhost} {
+	root * /opt/workready/nexuspoint-systems/dist
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+{$DOMAIN_HORIZON:horizon.localhost} {
+	root * /opt/workready/horizon-foundation/dist
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+{$DOMAIN_SOUTHERN_CROSS:southerncross.localhost} {
+	root * /opt/workready/southern-cross-financial/dist
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+{$DOMAIN_METRO:metro.localhost} {
+	root * /opt/workready/metro-council-wa/dist
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+{$DOMAIN_MERIDIAN:meridian.localhost} {
+	root * /opt/workready/meridian-advisory/dist
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+# --- Platform services ---
+
+{$DOMAIN_PORTAL:portal.localhost} {
+	root * /opt/workready/workready-portal
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+{$DOMAIN_SEEK:seek.localhost} {
+	root * /opt/workready/workready-jobs/dist
+	file_server
+	try_files {path} {path}/ /index.html
+}
+
+{$DOMAIN_API:api.localhost} {
+	reverse_proxy localhost:8000
+
+	# CORS headers — Caddy handles these so the API doesn't need to
+	# worry about which domains are in play for this deployment.
+	header {
+		Access-Control-Allow-Origin *
+		Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		Access-Control-Allow-Headers "Authorization, Content-Type"
+	}
+}
