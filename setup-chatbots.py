@@ -378,18 +378,11 @@ def create_embed(ws_slug: str, company_info: dict) -> str | None:
     domain = company_info["domain"]
 
     log(f"Creating embed for {ws_slug}")
-    result = api_post(f"/workspace/{ws_slug}/embed/new", {
+    result = api_post("/embed/new", {
+        "workspace_slug": ws_slug,
         "chat_mode": "query",
-        "allowlist_domains": EMBED_ALLOWLIST,
+        "allowlist_domains": ",".join(EMBED_ALLOWLIST),
     })
-
-    # Try alternative endpoint if that fails
-    if not result.get("embed"):
-        result = api_post("/embed/new", {
-            "workspaceSlug": ws_slug,
-            "chat_mode": "query",
-            "allowlist_domains": EMBED_ALLOWLIST,
-        })
 
     embed = result.get("embed", {})
     uuid = embed.get("uuid", "")
