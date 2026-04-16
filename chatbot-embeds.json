@@ -1,0 +1,13 @@
+{
+  "_comment": "AnythingLLM hiring desk chatbot embed UUIDs. Managed by setup-chatbots.py. Read by each company's build.py via CHATBOT_EMBEDS_FILE env var or auto-discovered.",
+  "base_api_url": "https://chat.eduserver.au/api/embed",
+  "widget_src": "https://chat.eduserver.au/embed/anythingllm-chat-widget.min.js",
+  "embeds": {
+    "ironvale-resources": "2bd54118-0de9-421c-8024-dd876d21101c",
+    "nexuspoint-systems": "c6342dc9-36c2-45c8-9053-311af789bc02",
+    "horizon-foundation": "87ee0e28-dec2-4cfc-bfe3-30da3bf38674",
+    "southern-cross-financial": "630d4edc-d0b3-43d2-98f1-099ebcb877ab",
+    "metro-council-wa": "0781ac58-bf3e-4768-b061-fa292f7993b8",
+    "meridian-advisory": "3fb2faa0-1c8a-44c1-a8d8-19b2a3a3fed8"
+  }
+}
