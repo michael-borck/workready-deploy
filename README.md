@@ -99,4 +99,4 @@ The `install.sh` script is the single source of truth for both deployment paths.
 
 ## Part of the WorkReady simulation
 
-WorkReady is an educational internship simulation built for Curtin University. All companies and positions are fictional. See [the plan document](https://github.com/michael-borck/loco-ensayo) for the full context.
+WorkReady is an educational internship simulation built as a university educational simulation. All companies and positions are fictional. See [the plan document](https://github.com/michael-borck/loco-ensayo) for the full context.
