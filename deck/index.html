@@ -1,0 +1,305 @@
+<!doctype html>
+<!--
+  WorkReady — elevator pitch deck
+  Present: open in any browser. ←/→ to navigate, S for speaker notes.
+  Uses reveal.js from CDN (needs internet; download dist/ for offline).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WorkReady — the internship simulation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<style>
+  :root {
+    --wr-blue: #4a63e7;
+    --wr-deep: #14366b;
+    --wr-coral: #fb6a3a;
+    --wr-green: #00d4aa;
+  }
+  .reveal { font-size: 30px; }
+  .reveal h1, .reveal h2, .reveal h3 { color: #fff; }
+  .reveal h1 { font-size: 1.9em; }
+  .accent { color: var(--wr-blue); }
+  .green { color: var(--wr-green); }
+  .coral { color: var(--wr-coral); }
+  .muted { color: #94a3b8; }
+  .small { font-size: 0.72em; }
+  .lead { font-size: 1.15em; line-height: 1.4; }
+  .cols { display: flex; gap: 2rem; text-align: left; }
+  .cols > div { flex: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+  .chip {
+    background: rgba(74, 99, 231, 0.18);
+    border: 1px solid rgba(74, 99, 231, 0.55);
+    color: #dbe3ff;
+    border-radius: 999px;
+    padding: 0.15em 0.8em;
+    font-size: 0.62em;
+    font-family: monospace;
+  }
+  table.wr { font-size: 0.72em; margin: 0 auto; }
+  table.wr th, table.wr td { padding: 0.25em 0.7em; border-bottom: 1px solid #334155; }
+  table.wr th { color: var(--wr-blue); text-align: left; }
+  table.wr td:first-child { font-family: monospace; font-size: 0.9em; color: #9fd0ff; }
+  .stage-strip { display: flex; gap: 0.6rem; justify-content: center; margin: 1rem 0; }
+  .stage {
+    background: #0f172a; border: 1px solid #334155; border-top: 3px solid var(--wr-blue);
+    border-radius: 8px; padding: 0.6rem 0.5rem; width: 13%; font-size: 0.5em; line-height: 1.35;
+  }
+  .stage b { display: block; color: var(--wr-blue); font-size: 1.25em; margin-bottom: 0.2em; }
+  .preset { border: 1px solid #334155; border-radius: 10px; padding: 1rem 1.4rem; }
+  .preset h3 { color: var(--wr-green); }
+  code { color: #9fd0ff !important; }
+  .footer-note { position: absolute; bottom: 1.2em; left: 0; right: 0; text-align: center;
+                 font-size: 0.45em; color: #64748b; }
+  ul.tight { line-height: 1.5; }
+  ul.tight li { margin: 0.35em 0; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 · Title -->
+<section>
+  <h1><span class="accent">Work</span>Ready</h1>
+  <p class="lead">The internship simulation where students can<br>
+     <span class="coral">fail safely</span> before it counts.</p>
+  <p class="muted small">Job hunt → interview → placement → team lunches → exit interview.<br>
+     Six fictional employers. Real conversations. Zero stakes.</p>
+  <aside class="notes">Open with the one-liner: every graduate faces their first interview, first
+  awkward team lunch, first ambiguous task brief. WorkReady lets them rehearse all of it with AI
+  characters in a fictional world — before a real employer is watching.</aside>
+</section>
+
+<!-- 2 · Problem -->
+<section>
+  <h2>Graduates get <span class="coral">one shot</span> at learning how work works</h2>
+  <div class="cols">
+    <div>
+      <ul class="tight">
+        <li>Real placements are <b>scarce and high-stakes</b></li>
+        <li>The hard parts are <b>unwritten</b>: interviews, inbox etiquette, team lunches, ambiguous briefs</li>
+        <li>Role-play with classmates isn't <b>real enough to sting</b></li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li>Feedback arrives <b>too late to help</b></li>
+        <li>Lecturers can't observe workplace behaviour</li>
+        <li>Students fear looking foolish — so they <b>don't practise</b></li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">The pain is emotional as much as practical: students freeze in interviews
+  because they've never done one. The simulation gives them reps.</aside>
+</section>
+
+<!-- 3 · The idea -->
+<section>
+  <h2>A working world, shrunk to fit a classroom</h2>
+  <p class="lead">Students sign in with an access code, browse a Seek-style job board, and live the
+  full arc of an internship — <b>conversations are typed, but properly back-and-forth</b> with
+  AI characters who remember, coach, and (yes) reject.</p>
+  <div class="chips">
+    <span class="chip">seek.jobs board</span><span class="chip">personal + work inboxes</span>
+    <span class="chip">Teams-style chat</span><span class="chip">hiring interviews</span>
+    <span class="chip">mentor task feedback</span><span class="chip">team lunchroom</span>
+    <span class="chip">exit interview</span><span class="chip">lecturer journey reports</span>
+  </div>
+  <p class="small muted">Six fictional Western Australian companies, each with its own website,
+  culture, and staff.</p>
+  <aside class="notes">Emphasise: it's not a chatbot with a costume. It's a system — state machine,
+  inboxes, calendars, social events — that happens to be staffed by AI.</aside>
+</section>
+
+<!-- 4 · Six stages -->
+<section>
+  <h2>The whole arc, end to end</h2>
+  <div class="stage-strip">
+    <div class="stage"><b>01</b>Browse &amp; apply on seek.jobs</div>
+    <div class="stage"><b>02</b>Resume outcome — with honest feedback</div>
+    <div class="stage"><b>03</b>Interview with the hiring manager</div>
+    <div class="stage"><b>04</b>Three work tasks + mid-placement coaching</div>
+    <div class="stage"><b>05</b>Team lunchroom — social presence</div>
+    <div class="stage"><b>06</b>Exit interview — scored on self-awareness</div>
+  </div>
+  <p class="small muted">Every stage produces feedback the student can act on — and a record the
+  lecturer can read.</p>
+  <aside class="notes">Stage 6 is deliberately a different character (HR, not the hiring manager)
+  so students feel safe being honest. Exit is scored on self-awareness, not performance.</aside>
+</section>
+
+<!-- 5 · Fail safely -->
+<section>
+  <h2>Designed to be <span class="coral">fail-safe</span>, not fool-proof</h2>
+  <ul class="tight">
+    <li>Resumes get <b>honest rejection feedback</b> — strengths, gaps, what to fix</li>
+    <li>Interviews go badly sometimes; the debrief is <b>specific, not crushing</b></li>
+    <li>Late task? The mentor notices, life goes on</li>
+    <li>Email a colleague badly? A comms coach scores tone &amp; recipient choice</li>
+    <li>Every rejection <b>unblocks another company</b> — the world keeps moving</li>
+  </ul>
+  <p class="lead accent">Rehearse the stumble, skip the scar.</p>
+  <aside class="notes">The comms monitor is a hidden gem: every outgoing student message is
+  scored for recipient appropriateness and tone. Teaching moment, not surveillance.</aside>
+</section>
+
+<!-- 6 · Privacy -->
+<section>
+  <h2>Privacy by <span class="accent">design</span> — not by policy</h2>
+  <div class="cols">
+    <div>
+      <ul class="tight">
+        <li>Students sign in with an issued <b>access code</b> — <code>WR-XXXX-XXXX</code></li>
+        <li>Server stores <b>no email, no name</b> — code→person mapping lives with the lecturer</li>
+        <li>In-sim persona: students <b>pick any name</b>; mailbox derives from it</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li>Uploaded resumes are <b>redacted at import</b> — emails, phones, addresses stripped</li>
+        <li>All mail &amp; chat is <b>in-sim fiction</b> — nothing leaves the server</li>
+        <li>Codes are revocable, redemption fail-closed</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted">The server can't leak what it never stored.</p>
+  <aside class="notes">This lands well with privacy offices: unlinkability by construction, not
+  by promise. The persona name is a stage name — fiction the student chooses.</aside>
+</section>
+
+<!-- 7 · Six employers -->
+<section>
+  <h2>Six employers. Six cultures.</h2>
+  <table class="wr">
+    <tr><th>Company</th><th>Industry</th><th>Flavour</th></tr>
+    <tr><td>NexusPoint Systems</td><td>Cybersecurity / IT</td><td>SOC floor energy, 9–5</td></tr>
+    <tr><td>IronVale Resources</td><td>Mining</td><td>7am shift pattern, safety-first culture</td></tr>
+    <tr><td>Meridian Advisory</td><td>Consulting</td><td>Client-facing polish, deck culture</td></tr>
+    <tr><td>Metro Council WA</td><td>Local government</td><td>Process, community, stakeholders</td></tr>
+    <tr><td>Southern Cross Financial</td><td>Financial planning</td><td>Compliance, trust, precision</td></tr>
+    <tr><td>Horizon Foundation</td><td>Not-for-profit</td><td>Mission-driven, stretched teams</td></tr>
+  </table>
+  <p class="small muted">Each has its own site, staff personas, business hours, task templates —
+  even its own email domain.</p>
+  <aside class="notes">IronVale's characters reply on mine-shift hours. Students notice this —
+  and it changes how they plan their week. Culture is mechanical, not decorative.</aside>
+</section>
+
+<!-- 8 · Time is a config file -->
+<section>
+  <h2><span class="green">One env file</span> stretches the semester</h2>
+  <div class="cols">
+    <div class="preset">
+      <h3>Workshop afternoon</h3>
+      <p class="small"><code>RESUME_FEEDBACK_DELAY_MINUTES=0</code><br>
+         <code>TASK_FEEDBACK_DELAY_MINUTES=0</code><br>
+         <code>TASK_DEADLINE_DAYS=7</code></p>
+      <p class="small muted">Full six-stage arc in ~45 minutes.<br>Tutorials, open days, demos.</p>
+    </div>
+    <div class="preset">
+      <h3>Authentic placement</h3>
+      <p class="small"><code>RESUME_FEEDBACK_DELAY=180±120</code><br>
+         <code>TASK_FEEDBACK_DELAY=120±60</code><br>
+         <code>TASK_DEADLINE_DAYS=7 · MAX_CYCLES=3</code></p>
+      <p class="small muted">A believable 2–3 week internship inside a 12-week unit.</p>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:1rem">Jitter is the pedagogy: real employers don't reply
+  in three seconds. Students learn to sit with uncertainty.</p>
+  <aside class="notes">This is the config-as-selling-point slide: pacing, hours, culture, social
+  intensity — all env vars and data files. No code changes, no redeploy to change the calendar.</aside>
+</section>
+
+<!-- 9 · For lecturers -->
+<section>
+  <h2>Built for the <span class="accent">lecturer</span>, too</h2>
+  <ul class="tight">
+    <li>Issue &amp; revoke access codes in bulk — hand them out like a class list</li>
+    <li><b>Journey report</b>: one printable page per placement — resume scores, interview
+        transcript, task feedback, coaching notes, exit reflection</li>
+    <li>Inspect any student's inboxes, force outcomes, flush pending messages for teaching</li>
+    <li><b>No AI grading</b> — the sim assesses; the lecturer grades</li>
+  </ul>
+  <aside class="notes">The journey report is the assessment artefact. Deliberately no aggregate
+  AI mark — academics keep the judgement.</aside>
+</section>
+
+<!-- 10 · Architecture -->
+<section>
+  <h2>Runs on <span class="accent">one box</span> — or a hundred</h2>
+  <div class="cols">
+    <div>
+      <ul class="tight">
+        <li>Front-ends: static sites on GitHub Pages</li>
+        <li>Backend: one container, SQLite, <b>no background workers</b> — time is lazy-delivered</li>
+        <li>Scales to a cohort by adding students, not servers</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Pluggable brain</b>: <code>stub</code> (offline &amp; deterministic) →
+            <code>ollama</code> (local, free) → <code>anthropic</code>/<code>openrouter</code></li>
+        <li>Every conversation surface degrades gracefully — the sim always runs</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">Demo-tier runs with zero API keys and no internet. Same code, one env var,
+  upgrades to Claude-class conversations for production cohorts.</aside>
+</section>
+
+<!-- 11 · Live demo -->
+<section>
+  <h2>It's <span class="green">live</span> — try it now</h2>
+  <table class="wr">
+    <tr><td>workready.eduserver.au</td><td>Student portal — sign in with a code</td></tr>
+    <tr><td>seekjobs.eduserver.au</td><td>The job board</td></tr>
+    <tr><td>primer.eduserver.au</td><td>Interactive fiction primer (15 min)</td></tr>
+    <tr><td>ironvaleresources.eduserver.au</td><td>…and five more employer sites</td></tr>
+    <tr><td>workready.eduserver.au/admin.html</td><td>Lecturer dashboard</td></tr>
+  </table>
+  <p class="small muted" style="margin-top:1rem">All companies and positions fictional.
+  Nothing personal is stored.</p>
+  <aside class="notes">Hand out codes here. Best first move for the audience: sign in, apply to
+  NexusPoint with the sample resume, watch the interview start.</aside>
+</section>
+
+<!-- 12 · Roadmap -->
+<section>
+  <h2>Where it goes next</h2>
+  <div class="cols">
+    <div>
+      <ul class="tight">
+        <li><b>Now</b> — code identity, tasks view, persona profiles, lecturer dashboard</li>
+        <li><b>Next</b> — real email delivery, config console for cohort pacing &amp; company data
+            (edit → republish, no code)</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Then</b> — Telegram/Teams channels, per-cohort config, LMS integration</li>
+        <li><b>Institutional</b> — university SSO, gradebook pass-back</li>
+      </ul>
+    </div>
+  </div>
+  <p class="lead accent" style="margin-top:1.2rem">Every graduate rehearses a fire drill.<br>
+  Why not their first internship?</p>
+  <aside class="notes">Close on the fire-drill line. The ask: a pilot cohort and one teaching
+  period of feedback.</aside>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    plugins: [RevealNotes],
+  });
+</script>
+</body>
+</html>
