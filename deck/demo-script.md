@@ -5,7 +5,7 @@
 
 ## Pre-demo checklist (2 min before)
 
-- [ ] Tabs open, in order: **Portal** → **seek.jobs** → **Primer** → **NexusPoint** → **admin.html**
+- [ ] Tabs open, in order: **Portal** → **seek.jobs** → **Primer** → **NexusPoint** → **Console /admin**
 - [ ] Admin tab: token already saved (sessionStorage keeps it)
 - [ ] Resume file on desktop: `workready-jobs/samples/ava-mitchell-security-analyst.pdf`
 - [ ] Scratch file with the paste-blocks below (cover letter, interview answers, task submission)
