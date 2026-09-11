@@ -162,6 +162,17 @@ build_sites() {
     # Ensure uv is on PATH (may have been installed to ~/.local/bin)
     export PATH="$HOME/.local/bin:$PATH"
 
+    # Flatten the canonical jobs exports for the API. Company repos treat
+    # jobs.json as an ensayo build artifact (gitignored), so the tracked
+    # copies live in workready-api/jobs/. The API's load_jobs() reads
+    # SITES_DIR/<slug>.json in the flat layout — copy them there so every
+    # company loads regardless of what each repo ships.
+    local jobs_dir="$WORKREADY_DIR/workready-api/jobs"
+    if [ -d "$jobs_dir" ]; then
+        cp -f "$jobs_dir"/*.json "$WORKREADY_DIR/" 2>/dev/null ||
+            warn "  Could not copy jobs exports into $WORKREADY_DIR"
+    fi
+
     for site in "${COMPANY_SITES[@]}"; do
         local build_script="$WORKREADY_DIR/$site/site/build.py"
         if [ -x "$build_script" ]; then
