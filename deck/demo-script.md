@@ -1,7 +1,7 @@
 # WorkReady — 10-minute live demo script
 
 **Config on the VPS:** all feedback delays = 0 → everything lands instantly.
-**Codes:** issue more any time at `workready.eduserver.au/admin.html` (token in `~/homelab/workready/.env`).
+**Codes:** issue more any time at `workready.eduserver.au/the console's `/admin` (token in `~/homelab/workready/.env`).
 
 ## Pre-demo checklist (2 min before)
 
@@ -48,8 +48,8 @@
 - Click **Inbox** (personal) → open the application response.
 - Read the fit score + a strength and a gap aloud.
 - **If it failed instead** (typed a too-short cover letter): show the rejection feedback, say
-  *"failure is data — and the world keeps moving"*, then quietly force-pass via admin
-  (`admin.html → student → Force state → resume_pass`) and move on. Do not dwell.
+  *"failure is data — and the world keeps moving"*, then quietly force-pass via the console's
+  `/admin` (student → Force state → resume_pass) and move on. Do not dwell.
 
 ## 4:30 — The interview (~90 s, Portal tab)
 
@@ -89,7 +89,7 @@
 
 - Mention **exit interview** (Stage 6): reflective, with HR, scored on self-awareness — "leave
   them wanting it."
-- **admin.html** → student → **Journey report**: the printable lecturer artefact, resume to
+- **Console → /admin** → student → **Journey report**: the printable lecturer artefact, resume to
   exit, every stage.
 - *"No AI grading. The simulation assesses; the lecturer grades."*
 
