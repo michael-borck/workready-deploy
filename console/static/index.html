@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WorkReady Console</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root { --blue: #4a63e7; --ink: #1e293b; --muted: #64748b; --line: #e2e8f0; --green: #0a8a5f; --warn: #c2410c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.5 -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: #f5f6fa; }
+  header { background: var(--ink); color: #fff; padding: 0.7rem 1.2rem; display: flex; align-items: center; gap: 1rem; }
+  header h1 { font-size: 1rem; margin: 0; font-weight: 600; }
+  header h1 span { color: #9db4ff; }
+  header .hint { font-size: 0.75rem; color: #94a3b8; }
+  .layout { display: grid; grid-template-columns: 300px 1fr 380px; gap: 12px; padding: 12px; height: calc(100vh - 52px); }
+  .panel { background: #fff; border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; }
+  .panel h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); }
+  .filelist { overflow: auto; padding: 0.4rem; }
+  .filelist .group { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0.7rem 0.4rem 0.2rem; }
+  .filelist button { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 0.3rem 0.55rem;
+                     border-radius: 6px; cursor: pointer; font: inherit; font-size: 0.8rem; color: var(--ink); }
+  .filelist button:hover { background: #eef2ff; }
+  .filelist button.active { background: var(--blue); color: #fff; }
+  textarea { flex: 1; border: 0; padding: 0.9rem; font: 12px/1.55 ui-monospace, Menlo, monospace; resize: none; outline: none; width: 100%; }
+  .editor-head { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--line); }
+  .editor-head .path { font: 11px ui-monospace, monospace; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  button.btn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 0.45rem 0.9rem;
+               font: inherit; font-size: 0.8rem; cursor: pointer; }
+  button.btn:hover { border-color: var(--blue); color: var(--blue); }
+  button.btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  button.btn.primary:hover { background: #3a4fc7; }
+  button.btn:disabled { opacity: 0.5; cursor: wait; }
+  .actions { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.8rem; overflow: auto; }
+  .actions .row { display: flex; gap: 0.5rem; }
+  .actions .row .btn { flex: 1; }
+  input[type=text] { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 0.45rem 0.7rem; font: inherit; font-size: 0.8rem; }
+  label { font-size: 0.72rem; color: var(--muted); display: block; margin: 0.4rem 0 0.15rem; }
+  #log { flex: 1; background: #0f172a; color: #b8c5d9; font: 11px/1.5 ui-monospace, Menlo, monospace;
+         padding: 0.8rem; overflow: auto; white-space: pre-wrap; border-radius: 0 0 10px 10px; }
+  .panel h2 + #log { border-top: 0; }
+  .repos { padding: 0.5rem 0.8rem; overflow: auto; border-bottom: 1px solid var(--line); }
+  .repo { display: flex; align-items: center; gap: 0.45rem; font-size: 0.74rem; padding: 0.12rem 0; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+  .dot.dirty { background: var(--warn); }
+  .repo code { color: var(--muted); font-size: 0.66rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sep { border: 0; border-top: 1px solid var(--line); margin: 0.7rem 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>Work</span>Ready Console</h1>
+  <span class="hint">local only · content edits → build → deploy</span>
+</header>
+
+<div class="layout">
+  <div class="panel">
+    <h2>Editable content</h2>
+    <div class="filelist" id="files"><div class="group">Loading…</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="editor-head">
+      <span class="path" id="editor-path">Pick a file on the left</span>
+      <button class="btn primary" id="save" disabled>Save</button>
+    </div>
+    <textarea id="editor" spellcheck="false" disabled></textarea>
+  </div>
+
+  <div class="panel">
+    <h2>Build &amp; deploy</h2>
+    <div class="repos" id="repos"></div>
+    <div class="actions">
+      <label>Rebuild static sites (run before deploying)</label>
+      <div class="row">
+        <button class="btn" id="build-all">Build all sites</button>
+      </div>
+      <div class="row" id="company-builds"></div>
+      <hr class="sep">
+      <label>Deploy message (git commit text)</label>
+      <input type="text" id="deploy-msg" value="Content update via WorkReady Console">
+      <button class="btn primary" id="deploy-site">⬆ Deploy site content (commit + push)</button>
+      <button class="btn" id="deploy-api">⟳ Redeploy API container (VPS, ~4 min)</button>
+      <hr class="sep">
+      <label>Activity</label>
+    </div>
+    <div id="log">Ready.</div>
+  </div>
+</div>
+
+<script>
+var currentPath = null;
+var $ = function (id) { return document.getElementById(id); };
+
+function log(text) {
+  $('log').textContent += '\n' + text;
+  $('log').scrollTop = $('log').scrollHeight;
+}
+function api(method, path, body) {
+  return fetch(path, {
+    method: method,
+    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  }).then(function (r) { return r.json(); });
+}
+function btn(id, label) { var b = $(id); b.disabled = true; b.textContent = 'Working…'; return function () {
+  b.disabled = false; b.textContent = label; }; }
+
+// files
+api('GET', '/api/files').then(function (d) {
+  var last = null, html = '';
+  d.files.forEach(function (f) {
+    if (f.group !== last) { html += '<div class="group">' + f.group + '</div>'; last = f.group; }
+    html += '<button data-path="' + f.path + '">' + f.path.split('/').pop() + '</button>';
+  });
+  $('files').innerHTML = html;
+  $('files').querySelectorAll('button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $('files').querySelectorAll('button').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      currentPath = b.getAttribute('data-path');
+      $('editor-path').textContent = currentPath;
+      api('GET', '/api/file?path=' + encodeURIComponent(currentPath)).then(function (d) {
+        $('editor').value = d.content;
+        $('editor').disabled = false;
+        $('save').disabled = false;
+      });
+    });
+  });
+});
+
+$('save').addEventListener('click', function () {
+  if (!currentPath) return;
+  api('POST', '/api/file', { path: currentPath, content: $('editor').value }).then(function (d) {
+    log('Saved ' + d.saved + ' (' + d.bytes + ' bytes) — remember to build + deploy.');
+  });
+});
+
+// repo status
+function refreshStatus() {
+  api('GET', '/api/status').then(function (d) {
+    $('repos').innerHTML = d.repos.filter(function (r) { return r.exists; }).map(function (r) {
+      return '<div class="repo"><span class="dot' + (r.dirty ? ' dirty' : '') + '"></span>' +
+        r.repo + (r.dirty ? ' <code>uncommitted changes</code>' : '') + '</div>';
+    }).join('');
+  });
+}
+refreshStatus();
+
+// builds
+['Build all sites'].forEach(function () {});
+function runBuild(scope, btnId, label) {
+  var restore = btn(btnId, label);
+  log('$ build ' + scope + ' …');
+  api('POST', '/api/build/' + scope).then(function (d) {
+    log(d.log || 'done'); restore(); refreshStatus();
+  }).catch(function (e) { log('BUILD FAILED: ' + e); restore(); });
+}
+$('build-all').addEventListener('click', function () { runBuild('all', 'build-all', 'Build all sites'); });
+$('company-builds').innerHTML = '';
+['nexuspoint-systems', 'ironvale-resources', 'meridian-advisory', 'metro-council-wa',
+ 'southern-cross-financial', 'horizon-foundation', 'jobs', 'primer'].forEach(function (s) {
+  var b = document.createElement('button');
+  b.className = 'btn'; b.textContent = s.split('-')[0];
+  b.addEventListener('click', function () { runBuild(s, b.id || s, b.textContent); });
+  $('company-builds').appendChild(b);
+});
+
+// deploy
+$('deploy-site').addEventListener('click', function () {
+  var restore = btn('deploy-site', '⬆ Deploy site content');
+  log('$ deploy site: commit + push dirty repos …');
+  api('POST', '/api/deploy/site', { message: $('deploy-msg').value }).then(function (d) {
+    log(d.log); restore(); refreshStatus();
+  });
+});
+$('deploy-api').addEventListener('click', function () {
+  if (!confirm('Rebuild + recreate the API container on the VPS? (~4 min, brief downtime)')) return;
+  var restore = btn('deploy-api', '⟳ Redeploy API container');
+  log('$ deploy api: ssh rebuild (no-cache) + recreate …');
+  api('POST', '/api/deploy/api', {}).then(function (d) {
+    log(d.log); restore();
+  });
+});
+</script>
+</body>
+</html>
