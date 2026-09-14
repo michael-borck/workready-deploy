@@ -37,6 +37,10 @@ RUN chmod +x /tmp/deploy/install.sh /tmp/deploy/start.sh && \
 # The install script writes start.sh and Caddyfile into /opt/workready
 RUN chmod +x /opt/workready/start.sh
 
+# A release image must pass the session/privacy contract tests.
+RUN cd /opt/workready/workready-api && \
+    /root/.local/bin/uv run python -m unittest discover -s tests -v
+
 # Expose HTTP (80) and HTTPS (443, for Caddy auto-TLS if desired)
 EXPOSE 80 443
 

@@ -397,7 +397,7 @@
         }
         .funnel-label { width: 11.5rem; color: var(--text-muted, #64748b); }
         .funnel-bar-track { flex: 1; background: rgba(148, 163, 184, 0.18); border-radius: 999px; height: 10px; }
-        .funnel-bar { height: 10px; border-radius: 999px; background: #1f4d99; }
+        .funnel-bar { display: block; height: 10px; border-radius: 999px; background: #1f4d99; }
         .funnel-bar.alt { background: #00a67d; }
         .funnel-bar.warn { background: #fb6a3a; }
         .funnel-count { width: 2.2rem; text-align: right; font-weight: 600; }
@@ -665,6 +665,7 @@
             <div class="panel-header">
                 <h2>Access codes</h2>
                 <button id="refresh-students">Refresh</button>
+                <button id="retry-erasure">Retry erasure cleanup</button>
             </div>
 
             <div class="form-row">
@@ -672,6 +673,10 @@
                 <button id="gen-codes" class="primary">Issue codes</button>
             </div>
             <pre id="codes-out" class="json-block hidden" style="user-select: all;"></pre>
+            <div class="form-row">
+                <input id="revoke-code" placeholder="WR-XXXX-XXXX" aria-label="Access code to revoke" autocomplete="off">
+                <button id="revoke-code-button">Revoke code</button>
+            </div>
 
             <div class="panel-header" style="margin-top: 1rem;">
                 <h2>Students</h2>
@@ -684,6 +689,8 @@
 
         <main class="main">
             <div id="funnel-pane" class="panel hidden">
+                <label for="cohort-filter">Cohort</label>
+                <input id="cohort-filter" value="default" aria-label="Cohort to report">
                 <div class="panel-header"><h2>Cohort funnel</h2></div>
                 <div id="funnel-rows"></div>
                 <div class="funnel-meta" id="funnel-meta"></div>
@@ -711,8 +718,14 @@
                     ? 'http://localhost:8000'
                     : 'https://workready-api.eduserver.au';
 
-            var apiBase = sessionStorage.getItem('wr_admin_api_base') || DEFAULT_API_BASE;
-            var token = sessionStorage.getItem('wr_admin_token') || '';
+            var apiBase = 'Local console proxy';
+            var token = '';
+            sessionStorage.removeItem('wr_admin_token');
+            sessionStorage.removeItem('wr_admin_api_base');
+            var consoleSession = fetch('/api/session').then(function (r) {
+                if (!r.ok) throw new Error('Unlock the local console first.');
+                return r.json();
+            });
 
             var $ = function (id) { return document.getElementById(id); };
             var els = {
@@ -730,6 +743,7 @@
             };
 
             els.apiBase.value = apiBase;
+            els.apiBase.readOnly = true;
             els.token.value = token;
 
             var state = {
@@ -741,20 +755,17 @@
             // ============================================================
             // API helpers
             // ============================================================
-            function api(method, path, body) {
-                if (!token) {
-                    showToast('Enter an admin token first', 'error');
-                    return Promise.reject(new Error('No token'));
-                }
+            async function api(method, path, body) {
+                var localSession = await consoleSession;
                 var opts = {
                     method: method,
-                    headers: { 'Authorization': 'Bearer ' + token },
+                    headers: { 'X-Console-CSRF': localSession.csrf },
                 };
                 if (body) {
                     opts.headers['Content-Type'] = 'application/json';
                     opts.body = JSON.stringify(body);
                 }
-                return fetch(apiBase + path, opts).then(function (r) {
+                return fetch('/api/admin/' + path.replace('/api/v1/admin/', ''), opts).then(function (r) {
                     if (!r.ok) {
                         return r.json().then(function (j) {
                             throw new Error(j.detail || ('HTTP ' + r.status));
@@ -795,7 +806,19 @@
             // ============================================================
             // Token / connection
             // ============================================================
-            function verifyToken() {
+            async function verifyToken() {
+                if (token) {
+                    var localSession = await consoleSession;
+                    var connection = await fetch('/api/admin/connect', {
+                        method: 'POST', headers: {'Content-Type': 'application/json', 'X-Console-CSRF': localSession.csrf},
+                        body: JSON.stringify({token: token})
+                    });
+                    token = ''; els.token.value = '';
+                    if (!connection.ok) {
+                        els.status.textContent = 'Admin credential not accepted';
+                        return false;
+                    }
+                }
                 return api('GET', '/api/v1/admin/health')
                     .then(function () {
                         els.status.textContent = 'connected';
@@ -811,14 +834,12 @@
 
             els.save.addEventListener('click', function () {
                 token = els.token.value.trim();
-                apiBase = els.apiBase.value.trim().replace(/\/$/, '');
-                sessionStorage.setItem('wr_admin_token', token);
-                sessionStorage.setItem('wr_admin_api_base', apiBase);
                 verifyToken().then(function (ok) {
                     if (ok) {
                         showToast('Token verified', 'success');
                         loadStudents();
                         loadJobs();
+                        loadFunnel();
                     }
                 });
             });
@@ -827,10 +848,11 @@
             // Students list
             // ============================================================
             function loadFunnel() {
-                return api('GET', '/api/v1/admin/funnel').then(function (d) {
+                var cohort = $('cohort-filter').value.trim() || 'default';
+                return api('GET', '/api/v1/admin/funnel?cohort=' + encodeURIComponent(cohort)).then(function (d) {
                     var pane = $('funnel-pane'), rows = $('funnel-rows');
                     if (!pane || !rows) return;
-                    var max = 1;
+                    var max = Math.max(1, d.completed, d.rejected);
                     d.funnel.forEach(function (f) { if (f.count > max) max = f.count; });
                     var html = '';
                     d.funnel.forEach(function (f) {
@@ -874,9 +896,9 @@
                 state.students.forEach(function (s) {
                     var stateKey = s.state.split(':')[0].toLowerCase();
                     var stateLabel = s.state.replace(':', ' / ').toLowerCase();
-                    var sel = state.selectedEmail === s.code ? ' selected' : '';
+                    var sel = String(state.selectedEmail) === String(s.id) ? ' selected' : '';
                     html +=
-                        '<div class="student-row' + sel + '" data-email="' + escapeHtml(s.code) + '">' +
+                        '<div class="student-row' + sel + '" data-email="' + s.id + '">' +
                         '<div class="student-row-email">' + escapeHtml(s.code) + '</div>' +
                         '<div class="student-row-meta">' +
                         '<span class="state-pill s-' + stateKey + '">' + escapeHtml(stateLabel) + '</span>' +
@@ -1012,7 +1034,7 @@
                 html += '</div>';
 
                 els.detail.innerHTML = html;
-                bindDetailActions(s.code);
+                bindDetailActions(s.id);
             }
 
             function renderAppCard(app) {
@@ -1324,15 +1346,15 @@
                     if (!confirm('Reset all applications, messages, bookings for ' + email + '?')) return;
                     api('POST', '/api/v1/admin/students/' + encodeURIComponent(email) + '/reset')
                         .then(function (r) {
-                            showToast('Reset — removed ' + r.applications_removed + ' applications', 'success');
+                            showToast(r.complete ? 'Reset complete. Removed ' + r.applications_removed + ' applications.' : 'Records reset; file or database cleanup is pending. Retry erasure cleanup before claiming completion.', r.complete ? 'success' : 'error');
                             refreshAfterChange(email);
                         })
                         .catch(function (err) { showToast(err.message, 'error'); });
                 } else if (action === 'delete') {
                     if (!confirm('Permanently delete ' + email + ' and all data?')) return;
                     api('DELETE', '/api/v1/admin/students/' + encodeURIComponent(email))
-                        .then(function () {
-                            showToast('Deleted ' + email, 'success');
+                        .then(function (r) {
+                            showToast(r.complete ? 'Student erased and access code revoked.' : 'Records erased; file or database cleanup is pending. Retry erasure cleanup.', r.complete ? 'success' : 'error');
                             state.selectedEmail = null;
                             els.detail.innerHTML = '<div class="placeholder">Select a student.</div>';
                             loadStudents();
@@ -1374,16 +1396,33 @@
             function refreshAfterChange(email) {
                 loadStudents();
                 loadDetail(email);
+                loadFunnel();
             }
 
             // ============================================================
             // Initial wiring
             // ============================================================
             els.refresh.addEventListener('click', function () { loadStudents(); loadFunnel(); });
+            $('cohort-filter').addEventListener('change', loadFunnel);
+            $('revoke-code-button').addEventListener('click', function () {
+                var value = $('revoke-code').value.trim();
+                if (!value) return;
+                api('POST', '/api/v1/admin/codes/revoke', {code: value}).then(function () {
+                    $('revoke-code').value = '';
+                    showToast('Code revoked. Its student sessions can no longer access the API.', 'success');
+                    loadStudents(); loadFunnel();
+                }).catch(function (error) { showToast(error.message, 'error'); });
+            });
+            $('retry-erasure').addEventListener('click', function () {
+                api('POST', '/api/v1/admin/erasure/retry').then(function (result) {
+                    var pending = result.files_pending_cleanup || result.wal_checkpoint_pending;
+                    showToast(pending ? 'Cleanup is still pending. Check storage permissions and active database readers.' : 'Pending file and database cleanup complete. Backups follow the operator expiry policy.', pending ? 'error' : 'success');
+                }).catch(function (error) { showToast(error.message, 'error'); });
+            });
             els.createBtn.addEventListener('click', function () {
                 var count = parseInt(els.newEmail.value, 10);
                 if (!count || count < 1) return;
-                api('POST', '/api/v1/admin/codes/generate', { count: count, cohort: 'demo' })
+                api('POST', '/api/v1/admin/codes/generate', { count: count, cohort: $('cohort-filter').value.trim() || 'default' })
                     .then(function (data) {
                         var out = els.codesOut;
                         out.textContent = (data.codes || []).join('\n');
@@ -1403,16 +1442,14 @@
                 if (e.key === 'Enter') els.createBtn.click();
             });
 
-            // Auto-connect if a token is already saved
-            if (token) {
-                verifyToken().then(function (ok) {
+            // The local server may already hold an admin credential for this session.
+            verifyToken().then(function (ok) {
                     if (ok) {
                         loadStudents();
                         loadJobs();
                         loadFunnel();
                     }
-                });
-            }
+            }).catch(function (error) { showToast(error.message, 'error'); });
         })();
     </script>
 </body>

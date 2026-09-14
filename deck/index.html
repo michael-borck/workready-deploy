@@ -153,19 +153,19 @@
     <div>
       <ul class="tight">
         <li>Students sign in with an issued <b>access code</b> — <code>WR-XXXX-XXXX</code></li>
-        <li>Server stores <b>no email, no name</b> — code→person mapping lives with the lecturer</li>
+        <li><b>Pseudonymous participation</b>: use an invented persona; the roster mapping stays with the lecturer</li>
         <li>In-sim persona: students <b>pick any name</b>; mailbox derives from it</li>
       </ul>
     </div>
     <div>
       <ul class="tight">
-        <li>Uploaded resumes are <b>redacted at import</b> — emails, phones, addresses stripped</li>
-        <li>All mail &amp; chat is <b>in-sim fiction</b> — nothing leaves the server</li>
+        <li>Use synthetic resumes. <b>Review filtered text</b> before assessment; filtering can miss identifiers</li>
+        <li>Mail &amp; chat are simulated. <b>Saved activity is visible to lecturers</b>; cloud AI receives prompts when selected</li>
         <li>Codes are revocable, redemption fail-closed</li>
       </ul>
     </div>
   </div>
-  <p class="small muted">The server can't leak what it never stored.</p>
+  <p class="small muted">Minimise personal data, explain what is saved, and provide tested erasure.</p>
   <aside class="notes">This lands well with privacy offices: unlinkability by construction, not
   by promise. The persona name is a stage name — fiction the student chooses.</aside>
 </section>
@@ -197,7 +197,7 @@
       <p class="small"><code>RESUME_FEEDBACK_DELAY_MINUTES=0</code><br>
          <code>TASK_FEEDBACK_DELAY_MINUTES=0</code><br>
          <code>TASK_DEADLINE_DAYS=7</code></p>
-      <p class="small muted">Full six-stage arc in ~45 minutes.<br>Tutorials, open days, demos.</p>
+      <p class="small muted">Compressed pacing for tutorials and demos.<br>Actual duration depends on student interaction.</p>
     </div>
     <div class="preset">
       <h3>Authentic placement</h3>
@@ -229,20 +229,20 @@
 
 <!-- 10 · Architecture -->
 <section>
-  <h2>Runs on <span class="accent">one box</span> — or a hundred</h2>
+  <h2>A compact deployment for teaching pilots</h2>
   <div class="cols">
     <div>
       <ul class="tight">
         <li>Front-ends: static sites on GitHub Pages</li>
         <li>Backend: one container, SQLite, <b>no background workers</b> — time is lazy-delivered</li>
-        <li>Scales to a cohort by adding students, not servers</li>
+        <li>Validate model cost and concurrent usage with each cohort</li>
       </ul>
     </div>
     <div>
       <ul class="tight">
         <li><b>Pluggable brain</b>: <code>stub</code> (offline &amp; deterministic) →
             <code>ollama</code> (local, free) → <code>anthropic</code>/<code>openrouter</code></li>
-        <li>Every conversation surface degrades gracefully — the sim always runs</li>
+        <li>Stub mode supports rehearsals; cloud-provider failures still need operational handling</li>
       </ul>
     </div>
   </div>
@@ -261,7 +261,7 @@
     <tr><td>local console → /admin</td><td>Lecturer dashboard (token-gated, unpublished)</td></tr>
   </table>
   <p class="small muted" style="margin-top:1rem">All companies and positions fictional.
-  Nothing personal is stored.</p>
+  Use fictional profiles and the supplied synthetic resumes.</p>
   <aside class="notes">Hand out codes here. Best first move for the audience: sign in, apply to
   NexusPoint with the sample resume, watch the interview start.</aside>
 </section>

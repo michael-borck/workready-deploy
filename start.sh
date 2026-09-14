@@ -52,4 +52,5 @@ cd "$WORKREADY_DIR/workready-api"
 exec uv run --quiet uvicorn workready_api.app:app \
     --host 0.0.0.0 \
     --port 8000 \
+    --no-access-log \
     --log-level info

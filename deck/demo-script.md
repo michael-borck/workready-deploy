@@ -9,7 +9,7 @@
 - [ ] Admin tab: token already saved (sessionStorage keeps it)
 - [ ] Resume file on desktop: `workready-jobs/samples/ava-mitchell-security-analyst.pdf`
 - [ ] Scratch file with the paste-blocks below (cover letter, interview answers, task submission)
-- [ ] A fresh code, e.g. `WR-MR4A-5GV6` (list in `/tmp/demo-codes.txt`)
+- [ ] A fresh code issued for this demo. Do not put working credentials in this document.
 - [ ] Remember: the portal polls every 30 s — **clicking a nav item refreshes instantly**
 
 ---
@@ -23,11 +23,11 @@
 
 ## 1:00 — Sign in with a code (~1 min, Portal tab)
 
-- Type `WR-MR4A-5GV6` → Sign in.
+- Type the freshly issued demo code → Sign in.
 - **Persona modal appears**: "Pick any name you like" → type `Ava Mitchell`.
 - Point at the derived mailbox: `ava.mitchell@student.workready.eduserver.au`.
-- **Privacy beat**: *"The server stores a random code and this fiction — no email, no real name.
-  The mapping between code and human lives in my spreadsheet, nowhere else."*
+- **Privacy beat**: *"We use fictional profiles and pseudonymous access codes. Simulation
+  activity is saved for learning and lecturer review. Use the supplied synthetic resume."*
 
 ## 2:00 — Apply on seek.jobs (~90 s, seek.jobs tab)
 

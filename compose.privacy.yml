@@ -1,0 +1,15 @@
+# Merge after the VPS's existing docker-compose.yml. Paths are relative to
+# that first Compose file, not this override. Keep the caddy_default network.
+services:
+  workready-api:
+    command:
+      - bash
+      - -c
+      - export PATH=/root/.local/bin:$$PATH; cd /opt/workready/workready-api && exec uv run --quiet uvicorn workready_api.app:app --host 0.0.0.0 --port 8000 --no-access-log
+    environment:
+      WORKREADY_ATTACHMENTS_DIR: /opt/workready/data/attachments
+      STUDENT_SESSION_HOURS: "8"
+      LOGIN_REQUESTS_PER_MINUTE: "10"
+      RETENTION_DAYS: "120"
+      # Set this to the Caddy container's trusted address/network, not '*'.
+      FORWARDED_ALLOW_IPS: ${WORKREADY_TRUSTED_PROXY_IPS:-127.0.0.1}

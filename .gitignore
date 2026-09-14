@@ -7,3 +7,8 @@ data/
 
 # macOS
 .DS_Store
+._*
+__pycache__/
+*.pyc
+.venv/
+console/.env
