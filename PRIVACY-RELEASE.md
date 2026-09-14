@@ -1,5 +1,7 @@
 # Session and privacy release
 
+> Dated 0.3.0 rollout record, deployed 14 September 2026. Counts, image revisions and backup observations describe that release. For current procedures, use [operations](docs/operations.md), [configuration](docs/configuration.md) and [privacy](docs/privacy.md).
+
 This is a coordinated API/frontend release, not a live hotfix. Old clients that
 send contractor codes in URLs will receive 410 and must refresh. No production
 data needs to be reset. Session-table creation is idempotent at startup.

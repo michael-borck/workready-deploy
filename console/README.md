@@ -1,5 +1,7 @@
 # WorkReady local console
 
+[Project home](../README.md) · [Configuration](../docs/configuration.md) · [Operations](../docs/operations.md) · [Privacy](../docs/privacy.md)
+
 ## Start
 
 ```bash
@@ -24,7 +26,7 @@ The runtime's canonical job exports are `workready-api/jobs/<company>.json`. The
 
 Company biographies and `brief.yaml` edit website content. They do not automatically regenerate an AI persona or exported job description. Edit the runtime export when changing those behaviours. This distinction is shown in the file list.
 
-`workready-deploy/pacing.json` selects `custom`, `workshop` or `semester`, with a small allowlist of timing overrides. Runtime changes take effect when the API is redeployed. The console builds a Compose override from the API's preset table so old hardcoded timing values do not silently override the selection. Review `PRIVACY-RELEASE.md` before the first session-auth deployment.
+`workready-deploy/pacing.json` selects `custom`, `workshop` or `semester`, with a small allowlist of timing overrides. Runtime changes take effect when the API is redeployed. The console builds a Compose override from the API's preset table so old hardcoded timing values do not silently override the selection. See [pacing configuration](../docs/configuration.md#pacing-presets-and-precedence) and the [0.3.0 release record](../PRIVACY-RELEASE.md).
 
 ## Student management
 
@@ -40,7 +42,7 @@ The machine running the console needs an authenticated `gh` CLI as well as Git a
 
 `WORKREADY_HOME` selects the local checkout, `WORKREADY_VPS` selects the SSH alias, `WORKREADY_VPS_DIR` is relative to the remote user's home, and `WORKREADY_API_BASE` selects the trusted API upstream. The defaults match the existing `vps` / `homelab/workready` deployment.
 
-The console does not create or encrypt backups. Take a consistent backup and migrate legacy attachments before replacing the old API container. Backup expiry and erasure procedures are in `PRIVACY-RELEASE.md`.
+The console does not create or encrypt backups. Take a consistent backup and migrate legacy attachments before replacing an old API container. See [backup and recovery](../docs/operations.md#backup-and-recovery) and [retention and erasure](../docs/privacy.md#retention-and-erasure).
 
 ## Tests
 
