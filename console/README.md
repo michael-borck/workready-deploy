@@ -34,7 +34,9 @@ The console key and API admin token serve different purposes. Locking the consol
 
 ## API deployment
 
-The deployment action pulls the remote deploy repository, retains the previous image as `workready:rollback`, rebuilds without the stale clone-layer cache, recreates the service, and checks the public health response. A failed health check is an error, not a successful publish. Inspect logs and storage compatibility before using the rollback image.
+The deployment action starts and waits for the GitHub Actions image build, then pulls that release image onto the VPS. It retains the previous running image as `workready:rollback`, recreates the service without building locally, and checks the public health response. This avoids reinstalling Caddy and other image-build dependencies on the VPS. A failed health check is an error, not a successful publish. Inspect logs and storage compatibility before using the rollback image.
+
+The machine running the console needs an authenticated `gh` CLI as well as Git and SSH access. Publish content before requesting the image build; GitHub builds the committed repository versions.
 
 `WORKREADY_HOME` selects the local checkout, `WORKREADY_VPS` selects the SSH alias, `WORKREADY_VPS_DIR` is relative to the remote user's home, and `WORKREADY_API_BASE` selects the trusted API upstream. The defaults match the existing `vps` / `homelab/workready` deployment.
 

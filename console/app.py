@@ -9,6 +9,7 @@ import secrets
 import shlex
 import subprocess
 import time
+from datetime import datetime, timezone
 from contextlib import contextmanager
 from pathlib import Path
 from threading import Lock
@@ -342,27 +343,48 @@ def deploy_api(payload: dict):
     directory = VPS_DIR.removeprefix('~/')
     if directory.startswith('/') or '..' in directory.split('/'):
         raise HTTPException(400, 'VPS directory must be relative to the SSH user home')
-    overlay = json.dumps({'services': {'workready-api': {'environment': pacing}}})
     compose = 'docker compose -f docker-compose.yml -f workready-deploy/compose.privacy.yml -f compose.pacing.yml'
-    remote = ('cd "$HOME"/' + shlex.quote(directory) + ' && '
-              'git -C workready-deploy pull --ff-only && '
-              'printf %s ' + shlex.quote(overlay) + ' > compose.pacing.yml && '
-              'docker image tag workready:local workready:rollback && '
-              + compose + ' build --no-cache && ' + compose + ' up -d --force-recreate')
     if payload.get('dry_run'):
-        return {'log': f'ssh {VPS_ALIAS} {remote}', 'dry_run': True}
+        return {'log': f'Build published content in GitHub Actions, then ssh {VPS_ALIAS}: docker pull release image; {compose} up -d --no-build --force-recreate', 'dry_run': True}
     with operation():
+        image, build_log = build_published_image()
+        overlay = json.dumps({'services': {'workready-api': {'image': image, 'environment': pacing}}})
+        remote = ('cd "$HOME"/' + shlex.quote(directory) + ' && '
+                  'git -C workready-deploy pull --ff-only && '
+                  'printf %s ' + shlex.quote(overlay) + ' > compose.pacing.yml && '
+                  'docker image tag "$(docker inspect --format \'{{.Image}}\' workready-api)" workready:rollback && '
+                  'docker pull ' + shlex.quote(image) + ' && '
+                  'export WORKREADY_TRUSTED_PROXY_IPS="$(docker inspect --format \'{{(index .NetworkSettings.Networks "caddy_default").IPAddress}}\' caddy)" && '
+                  + compose + ' up -d --no-build --force-recreate')
         output = run(['ssh', '-o', 'BatchMode=yes', VPS_ALIAS, remote], timeout=1800)
         # Check HTTP + JSON, not a substring in the Docker build log.
         for _ in range(12):
             try:
                 response = httpx.get(API_BASE + '/health', timeout=5)
                 if response.status_code == 200 and response.json().get('status') == 'ok':
-                    return {'ok': True, 'log': output}
+                    return {'ok': True, 'log': build_log + '\n' + output, 'image': image}
             except (httpx.HTTPError, ValueError):
                 pass
             time.sleep(2)
         raise HTTPException(502, 'Health check failed. Previous image retained as workready:rollback; inspect before rollback.')
+
+
+def build_published_image() -> tuple[str, str]:
+    """Build on GitHub, where the image's external dependencies are reachable."""
+    repository = 'michael-borck/workready-deploy'
+    since = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    run(['gh', 'workflow', 'run', 'build.yml', '--repo', repository, '--ref', 'main'])
+    for _ in range(30):
+        runs = json.loads(run(['gh', 'run', 'list', '--repo', repository, '--workflow', 'build.yml',
+                              '--event', 'workflow_dispatch', '--limit', '5',
+                              '--json', 'databaseId,createdAt,headSha']))
+        fresh = [r for r in runs if r['createdAt'] >= since]
+        if fresh:
+            selected = min(fresh, key=lambda r: r['createdAt'])
+            log = run(['gh', 'run', 'watch', str(selected['databaseId']), '--repo', repository, '--exit-status'], timeout=1800)
+            return 'ghcr.io/michael-borck/workready:' + selected['headSha'][:7], log
+        time.sleep(2)
+    raise HTTPException(504, 'GitHub did not report the new image-build run. Check Actions before retrying.')
 
 
 def validate_pacing(data: dict) -> dict:

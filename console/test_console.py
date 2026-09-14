@@ -86,6 +86,16 @@ class ConsoleTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             console.validate_pacing({'WORKREADY_ADMIN_TOKEN': 'secret'})
 
+    def test_api_update_pulls_built_image_without_vps_build(self):
+        headers = self.login()
+        with patch.object(console, 'build_published_image', return_value=('ghcr.io/michael-borck/workready:test-release', 'CI passed')), patch.object(console, 'run', return_value='pulled') as runner, patch.object(console.httpx, 'get', return_value=httpx.Response(200, json={'status': 'ok'})):
+            response = self.c.post('/api/deploy/api', headers=headers, json={})
+        self.assertEqual(response.status_code, 200)
+        command = runner.call_args.args[0][-1]
+        self.assertIn('docker pull ghcr.io/michael-borck/workready:test-release', command)
+        self.assertIn('up -d --no-build', command)
+        self.assertNotIn(' build --no-cache', command)
+
 
 if __name__ == '__main__':
     unittest.main()

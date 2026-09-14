@@ -8,8 +8,27 @@ The API health response identifies this release as `0.3.0`.
 
 ## Verification status
 
-Implemented in the local checkout; not committed, pushed or deployed as part
-of this change. The existing live deployment is unchanged.
+Deployed on 14 September 2026. The API reports `0.3.0`, and the portal,
+job board, six company sites and primer have matching published clients.
+
+The deployed API source revision is `7a56fac`. The initial release image was
+`ghcr.io/michael-borck/workready:bd85574`, with registry digest
+`sha256:c5139e8257978cd943a5884865ac8e028bb33ab175e175b0123f59ccbc71d411`.
+The VPS Compose override now uses the public GitHub image for pull-based updates.
+
+Pre-release backup: `/home/michael/workready-backups/release-0.3.0-20260914`.
+It is outside the repositories, with a private directory and protected files.
+The database integrity check passed. All original record counts were preserved:
+6 students, 52 codes, 2 applications and 8 messages. There were no stored or
+orphaned mail attachments to migrate. The previous image remains available as
+`workready:pre-030-20260914`.
+
+After deployment, live API tests verified session login, ownership checks,
+filtered preview/application submission, logout, revocation and legacy URL
+rejection. A real Chrome session verified the published portal and job-board
+login, persona, reviewed PDF application and sign-out. These checks used new
+synthetic identities; all verification records and codes were erased afterward.
+Record counts were checked again and matched the pre-release backup.
 
 Passed locally:
 
@@ -27,8 +46,9 @@ Passed locally:
 - Primer playthrough through all eight scene tags.
 - All six company-site builds, job-board build and source diff checks.
 
-The browser tests intercepted network requests locally and did not create,
-read or alter production student records.
+The local browser tests intercepted network requests. The separate post-release
+checks used only newly issued synthetic production identities, which were then
+erased. Existing students' records were not used for testing.
 
 ## Implemented boundaries
 
@@ -112,10 +132,21 @@ Use the existing shared-Caddy network and merge `compose.privacy.yml` after the
 VPS Compose file. Back up before recreating. Keep the prior image for rollback;
 do not roll back to known-unprotected API routes for a real-data cohort.
 
-The content console is not the tool for deploying this source-code migration.
-It publishes reviewed content and can rebuild the API after the compatible
-source release is on GitHub. It retains `workready:rollback` and reports failed
-health checks but does not automatically roll back database changes.
+The content console publishes reviewed content, requests the GitHub Actions
+image build, then pulls the release image to the VPS. It retains a rollback
+image and reports failed health checks. It does not automatically roll back
+database changes or perform another breaking source-code migration.
+
+Routine VPS updates, after the GitHub image build completes:
+
+```bash
+docker compose --project-directory ~/homelab/workready pull
+docker compose --project-directory ~/homelab/workready up -d --no-build
+```
+
+Use the explicit release image/digest for recovery. Restoring the old API should
+only be done under maintenance because that version had known access-control
+gaps. Backup expiry remains an operator responsibility.
 
 ## Operational limits and follow-up checks
 
