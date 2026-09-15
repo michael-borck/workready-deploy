@@ -4,7 +4,7 @@
 
 Students use issued contractor codes and invented personas to practise applying for a role, interviewing, completing work, communicating with colleagues and reflecting on a placement. The employers are fictional. WorkReady is not an official university service or a real recruitment platform.
 
-The public project overview is in [`site/`](site/index.html). Its GitHub Pages address is `https://michael-borck.github.io/workready-deploy/` once publication is enabled. The student portal remains at [workready.eduserver.au](https://workready.eduserver.au/). See [landing-page setup](docs/operations.md#project-landing-page) for preview and hosting instructions.
+The public project overview is in [`site/`](site/index.html), published at `https://michael-borck.github.io/workready-deploy/`. The student portal remains at [workready.eduserver.au](https://workready.eduserver.au/). See [landing-page setup](docs/operations.md#project-landing-page) for preview and hosting instructions.
 
 ## Read this first
 

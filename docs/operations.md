@@ -50,7 +50,7 @@ Open `http://127.0.0.1:8080`. Check desktop/mobile layouts, keyboard navigation,
 
 ### First publication
 
-1. In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. Pages was not enabled when the landing page was added.
+1. If Pages is not yet enabled for this repository, set **Settings → Pages → Source** to **GitHub Actions**. Publication currently uses this method; do not switch back to **Deploy from a branch**, which publishes a different folder and overwrites the page.
 2. Commit and push the reviewed `site/` files and `.github/workflows/pages.yml` to `main`.
 3. Check the **Publish project landing page** workflow. It uploads only `site/` and deploys it with the standard Pages actions. A push changing the page/workflow triggers publication; manual dispatch is also available.
 4. Open `https://michael-borck.github.io/workready-deploy/` after the run succeeds.
