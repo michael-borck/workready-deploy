@@ -22,6 +22,7 @@ Verify DNS, actual container configuration and the running version before changi
 
 | Repository | Build | What Pages publishes |
 |---|---|---|
+| `workready-deploy` project landing page | No build; edit `site/` | `site/` via the project Pages workflow, after Pages is enabled |
 | `workready-portal` | No asset build; run its JavaScript checks | Repository root via Pages workflow |
 | `workready-jobs` | `python3 build.py` | Checked-in `dist/` via Pages workflow |
 | Each company | `uv run --quiet --with pyyaml --with jinja2 --with markdown python3 site/build.py` | Checked-in `dist/` via Pages workflow |
@@ -32,6 +33,37 @@ Run these commands from the named repository. Company/job-board Pages workflows 
 Review each repository's `git status` and diff. Stage only the intended files and outputs, commit them, and push `main` when ready to publish. Use the [local console](../console/README.md) for its supported content workflow, or Git directly for code changes.
 
 Publishing a static company site does not refresh the API's baked-in personas or startup job cache. If runtime data changed, also build and deploy the API image after publishing its inputs.
+
+## Project landing page
+
+The public overview lives in [`site/`](../site/index.html). It introduces the journey and links to the student portal, primer, job board, six company sites and project guides. It is separate from the student portal at `https://workready.eduserver.au/`.
+
+Edit `site/index.html` for copy and destinations, `site/assets/style.css` for layout, and the SVG files for illustration and favicon. All assets are local. The page uses native links and expandable FAQ sections, with no JavaScript, third-party fonts, analytics or API requests. Visiting one of its linked services is subject to that service's data handling.
+
+Preview from this repository:
+
+```bash
+python3 -m http.server 8080 --bind 127.0.0.1 --directory site
+```
+
+Open `http://127.0.0.1:8080`. Check desktop/mobile layouts, keyboard navigation, FAQ expansion and link destinations before publication. Asset URLs are relative so the same page works at a GitHub project subpath or a custom domain.
+
+### First publication
+
+1. In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. Pages was not enabled when the landing page was added.
+2. Commit and push the reviewed `site/` files and `.github/workflows/pages.yml` to `main`.
+3. Check the **Publish project landing page** workflow. It uploads only `site/` and deploys it with the standard Pages actions. A push changing the page/workflow triggers publication; manual dispatch is also available.
+4. Open `https://michael-borck.github.io/workready-deploy/` after the run succeeds.
+
+The repository's container-build workflow is separate and also runs on pushes to `main`. Publishing the project page does not recreate the VPS API container.
+
+### DNS and an optional custom domain
+
+Start with the standard GitHub Pages address. No DNS record or `CNAME` file is needed. Keep `workready.eduserver.au` pointing at the student portal.
+
+If a dedicated overview address is wanted later, choose a different hostname, such as `about.workready.eduserver.au`. Add that exact name in **Settings → Pages → Custom domain**, then create a DNS `CNAME` from the chosen hostname to **`michael-borck.github.io`**. A DNS CNAME target is a hostname, not `https://...` and not a path ending in `/workready-deploy/`.
+
+Wait for GitHub's DNS check and certificate provisioning, then enable **Enforce HTTPS**. With this Actions publication method, configure the custom domain in repository settings; a committed `CNAME` file is not required. Update published overview links when adopting the new address. GitHub's [custom-domain guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site) covers domain verification and troubleshooting.
 
 ## Build the bundled API image on GitHub
 

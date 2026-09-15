@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="520" viewBox="0 0 640 520" fill="none">
+  <title>A desk in a fictional workplace</title>
+  <desc>A laptop, a task brief, a message from a mentor and a plant, drawn in blue, green and warm yellow.</desc>
+  <!-- Office window and a small city beyond it. -->
+  <rect x="308" y="40" width="256" height="248" rx="125" fill="#edf2e2" stroke="#a6bba7" stroke-width="2"/>
+  <circle cx="452" cy="123" r="51" fill="#f2c565"/>
+  <path d="M334 219v-59h31v59m11 0v-89h38v89m18 0v-45h44v45m17 0v-70h43v70" stroke="#a6bba7" stroke-width="2" fill="#d3e1cf"/>
+  <path d="M435 40v248m-127-91h256" stroke="#a6bba7" stroke-width="2"/>
+  <!-- Small wall clock. -->
+  <circle cx="255" cy="101" r="27" fill="#f9f8ef" stroke="#a6bba7" stroke-width="2"/>
+  <path d="M255 84v18l11 6" stroke="#425e4c" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="255" cy="102" r="3" fill="#425e4c"/>
+  <!-- A mentor's message, deliberately an illustration rather than a live UI. -->
+  <g transform="rotate(-5 176 204)">
+    <rect x="49" y="150" width="254" height="101" rx="12" fill="#bccfba"/>
+    <rect x="43" y="143" width="254" height="101" rx="12" fill="#fffefa" stroke="#8ca58d" stroke-width="1.5"/>
+    <circle cx="77" cy="176" r="17" fill="#ead6bc"/>
+    <path d="M66 185c2-9 19-9 22 0" fill="#6d7e59"/>
+    <circle cx="77" cy="173" r="6" fill="#a8795b"/>
+    <text x="105" y="172" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#536466">YOUR MENTOR</text>
+    <text x="105" y="195" font-family="Arial, sans-serif" font-size="15" font-weight="600" fill="#182d32">Let's talk through</text>
+    <text x="105" y="216" font-family="Arial, sans-serif" font-size="15" font-weight="600" fill="#182d32">your ideas.</text>
+    <path d="m255 244 17 17v-17" fill="#fffefa" stroke="#8ca58d" stroke-width="1.5"/>
+    <path d="M256 244h16" stroke="#fffefa" stroke-width="2"/>
+  </g>
+  <!-- Desk surface. -->
+  <path d="m83 352 438-15 87 77-449 19Z" fill="#e7cf9e" stroke="#8f9171" stroke-width="2" stroke-linejoin="round"/>
+  <path d="m159 433 449-19v10l-449 20-76-80v-12Z" fill="#d5b681" stroke="#8f9171" stroke-width="2" stroke-linejoin="round"/>
+  <path d="m178 443 4 50m354-65 3 45m-418-78-5 58" stroke="#62745b" stroke-width="9"/>
+  <!-- Laptop. -->
+  <path d="m216 233 244 2c8 0 13 5 14 12l16 124-248 8-37-130c-3-10 1-16 11-16Z" fill="#354cc9" stroke="#263ba3" stroke-width="2"/>
+  <path d="m225 245 233 2 15 109-224 7Z" fill="#f3f2eb"/>
+  <path d="m242 379 248-8 60 32-280 15-51-23Z" fill="#cad3cd" stroke="#637a76" stroke-width="2" stroke-linejoin="round"/>
+  <path d="m260 382 221-7 36 18-239 11Z" fill="#8c9f98"/>
+  <path d="m341 402 70-3 12 6-70 3Z" fill="#e7ebe5"/>
+  <!-- Laptop screen: a simple work-brief document. -->
+  <path d="m226 245 29 118 40-1-25-117Z" fill="#e1e7df"/>
+  <circle cx="248" cy="263" r="7" fill="#354cc9"/>
+  <path d="m244 287 20 0m-17 12h20m-17 12h20" stroke="#849b8b" stroke-width="3" stroke-linecap="round"/>
+  <text x="294" y="273" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="1.5" fill="#536466">YOUR FIRST BRIEF</text>
+  <text x="300" y="299" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#182d32">Where would</text>
+  <text x="305" y="324" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#182d32">you start?</text>
+  <path d="M312 341h54" stroke="#354cc9" stroke-width="5" stroke-linecap="round"/>
+  <!-- Plant. -->
+  <path d="M530 321c-4-26-3-60 5-83m-6 44-15-25m17 6 16-17" stroke="#466e4e" stroke-width="3" stroke-linecap="round"/>
+  <path d="M534 258c-22-11-16-35 7-40 8 18 5 32-7 40Zm-12 24c-23-3-35-23-25-38 20 2 31 21 25 38Zm10 8c0-25 21-36 37-26-6 20-18 29-37 26Z" fill="#668a5c"/>
+  <path d="m507 304 49-1-5 47c-14 7-27 6-40 0Z" fill="#ba7651" stroke="#8c5b3d" stroke-width="2"/>
+  <path d="m505 305 53-1" stroke="#8c5b3d" stroke-width="5" stroke-linecap="round"/>
+  <!-- Coffee and notebook. -->
+  <ellipse cx="172" cy="355" rx="31" ry="10" fill="#bca77d"/>
+  <path d="M156 319h31v30c0 12-31 12-31 0Z" fill="#fffefa" stroke="#9da48b" stroke-width="2"/>
+  <path d="M187 326h7c14 0 12 20-7 20" stroke="#9da48b" stroke-width="4"/>
+  <ellipse cx="172" cy="319" rx="16" ry="5" fill="#ad7854" stroke="#9da48b" stroke-width="2"/>
+  <path d="M172 303c-9-8 8-12 0-21" stroke="#849b8b" stroke-width="2" stroke-linecap="round"/>
+  <g transform="rotate(-8 183 395)">
+    <rect x="127" y="378" width="98" height="36" rx="3" fill="#f3f2e4" stroke="#a6a587" stroke-width="1.5"/>
+    <path d="M141 379v34m12-23h49m-49 10h38" stroke="#b3b8a1" stroke-width="1.5"/>
+    <path d="m178 405 35-20" stroke="#354cc9" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <!-- A small note under the desk. -->
+  <g transform="rotate(6 388 456)">
+    <rect x="293" y="436" width="194" height="42" rx="7" fill="#f9e2a2" stroke="#c7ab65" stroke-width="1.5"/>
+    <path d="m310 456 5 5 10-12" stroke="#6f642f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="337" y="462" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#594f2b">Make room to learn.</text>
+  </g>
+  <path d="M103 87v20m-10-10h20m440 366v18m-9-9h18" stroke="#849b8b" stroke-width="2" stroke-linecap="round"/>
+</svg>
