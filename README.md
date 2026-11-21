@@ -1,5 +1,9 @@
 # WorkReady
 
+<p align="center">
+  <img src="site/assets/working-life.svg" alt="WorkReady" width="640">
+</p>
+
 **Start here for the whole project.** This repository is the documentation and operations home for WorkReady, an educational internship simulation. It also contains the publishing console, deployment recipes and presentation materials.
 
 Students use issued contractor codes and invented personas to practise applying for a role, interviewing, completing work, communicating with colleagues and reflecting on a placement. The employers are fictional. WorkReady is not an official university service or a real recruitment platform.
